@@ -99,7 +99,9 @@ class LoginScreen extends StatelessWidget {
 
                           if (savedEmail == enteredEmail &&
                               savedPassword == enteredPassword) {
-                            showDialog(
+
+                                await prefs.setBool("isLoggedIn", true);
+                                showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
