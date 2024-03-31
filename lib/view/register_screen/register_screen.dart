@@ -134,23 +134,33 @@ class RegisterScreen extends StatelessWidget {
                     height: 20,
                   ),
                   ElevatedButton.icon(
-                      onPressed: () {
+                      onPressed: () async {
                         if (formKey.currentState!.validate()) {
-                          Future<void> registerUser(
-                              BuildContext context) async {
-                            SharedPreferences preferences =
-                                await SharedPreferences.getInstance();
-                            await preferences.setString(
-                                'email', emailController1.text);
-                            await preferences.setString(
-                                'password', passwordController2.text);
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          await prefs.setString('email', emailController1.text);
+                          await prefs.setString(
+                              'password', passwordController2.text);
 
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => LoginScreen(),
-                                ));
-                          }
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text('Register Success'),
+                                content: Text('Registeration successfully'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => LoginScreen(),
+                                        )),
+                                    child: Text('OK'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         }
                       },
                       icon: Icon(Icons.login),

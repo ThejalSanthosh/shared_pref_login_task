@@ -5,6 +5,16 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      body: Center(
+          child: Text(
+        "Welcome Back ",
+        style: TextStyle(color: Colors.black, fontSize: 24),
+      )),
+      bottomNavigationBar: BottomNavigationBar(items: [
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+        BottomNavigationBarItem(icon: Icon(Icons.logout), label: "Logout")
+      ]),
+    );
   }
 }

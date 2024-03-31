@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_pref_login_task/view/home_screen/home_screen.dart';
 import 'package:shared_pref_login_task/view/register_screen/register_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -86,13 +87,57 @@ class LoginScreen extends StatelessWidget {
                     height: 20,
                   ),
                   ElevatedButton.icon(
-                      onPressed: () {
+                      onPressed: () async {
                         if (formKey.currentState!.validate()) {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HomeScreen(),
-                              ));
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          String? savedEmail = prefs.getString('email');
+                          String? savedPassword = prefs.getString('password');
+
+                          String enteredEmail = nameController1.text;
+                          String enteredPassword = nameController2.text;
+
+                          if (savedEmail == enteredEmail &&
+                              savedPassword == enteredPassword) {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Login Successful'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    HomeScreen(),
+                                              )),
+                                      child: Text('OK'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text('Login Failed'),
+                                  content: Text(
+                                      'Invalid email or password. Please try again.'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      child: Text('OK'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
                         }
                       },
                       icon: Icon(Icons.login),
@@ -104,19 +149,30 @@ class LoginScreen extends StatelessWidget {
                   SizedBox(
                     height: 20,
                   ),
-
                   Row(
                     children: [
-                      SizedBox(width:55,),
-                      Text("Not Registered?",style: TextStyle(color: Colors.black),),SizedBox(width: 2,),
-                      TextButton(onPressed: () {
-
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => RegisterScreen(),));
-                        
-                      }, child: Text("SignUp"))
+                      SizedBox(
+                        width: 55,
+                      ),
+                      Text(
+                        "Not Registered?",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      SizedBox(
+                        width: 2,
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => RegisterScreen(),
+                                ));
+                          },
+                          child: Text("SignUp"))
                     ],
                   )
-                                 ],
+                ],
               ),
             ),
           ),
